@@ -1,8 +1,6 @@
 ---
 title: "Make Data for VLOOKUP"
-output:
-  pdf_document: default
-  html_notebook: default
+output: rmarkdown::github_document
 ---
 
 Create Data
