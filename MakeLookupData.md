@@ -111,7 +111,7 @@ ggplot(Sales) +
   labs(
     x = "Revenue",
     y = "Frequency",
-    title = "Sale Revenue by Segment"
+    title = "Frequency of Individual Sales by Segment"
   ) +
   theme_minimal() +
   theme(panel.spacing = unit(1, "cm")) +
@@ -119,3 +119,22 @@ ggplot(Sales) +
 ```
 
 ![](MakeLookupData_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+
+What department has the highest payroll?
+
+``` r
+Employee %>% 
+    group_by(Dept) %>% 
+    summarise(SalaryTtl = sum(Salary)) %>% 
+    arrange(SalaryTtl) %>% 
+  ggplot(aes(x = Dept, y = SalaryTtl)) +
+  geom_bar(stat = "identity",fill = "#255F65") +
+    labs(
+    x = "Department",
+    y = "Revenue",
+    title = "Payroll by Department"
+  ) +
+  theme_classic()
+```
+
+![](MakeLookupData_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
