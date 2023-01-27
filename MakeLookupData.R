@@ -1,5 +1,6 @@
 library(tidyverse)
 library(lubridate)
+library(openxlsx)
 
 Employee = data.frame(
 EmployeeID = paste0("E",sample(1:500))) %>% 
@@ -41,6 +42,12 @@ mutate(
                  replace=TRUE)) %>% 
   mutate(Commission = SaleRevenue * 0.02)
 
+VL = createWorkbook()
+addWorksheet(VL, "Employee")
+addWorksheet(VL, "Sales")
+writeData(VL, "Employee",Employee)
+writeData(VL, "Sales",Sales)
+saveWorkbook(VL,"VLOOKUPpractice.xlsx")
 
 ###plot distributions
 ggplot(Employee) +
