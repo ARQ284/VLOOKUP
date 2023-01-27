@@ -101,6 +101,7 @@ ggplot(Sales) +
 ```
 
 ![](MakeLookupData_files/figure-gfm/unnamed-chunk-2-3.png)<!-- -->
+
 Examine sales revenue by customer segment
 
 ``` r
