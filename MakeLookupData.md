@@ -134,7 +134,8 @@ Employee %>%
     y = "Revenue",
     title = "Payroll by Department"
   ) +
-  theme_classic()
+  theme_classic() +
+  scale_y_continuous(labels = scales::unit_format(unit = "M", scale = 1e-6))
 ```
 
 ![](MakeLookupData_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
