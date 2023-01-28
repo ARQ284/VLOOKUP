@@ -1,34 +1,12 @@
 Make Data for VLOOKUP
 ================
 
-Create Data
+Create random employee…
 
 ``` r
-library(tidyverse,verbose=0)
-```
-
-    ## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
-    ## ✔ ggplot2 3.4.0      ✔ purrr   0.3.5 
-    ## ✔ tibble  3.1.8      ✔ dplyr   1.0.10
-    ## ✔ tidyr   1.2.1      ✔ stringr 1.4.1 
-    ## ✔ readr   2.1.3      ✔ forcats 0.5.2 
-    ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-    ## ✖ dplyr::filter() masks stats::filter()
-    ## ✖ dplyr::lag()    masks stats::lag()
-
-``` r
-library(lubridate,verbose=0)
-```
-
-    ## Loading required package: timechange
-    ## 
-    ## Attaching package: 'lubridate'
-    ## 
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     date, intersect, setdiff, union
-
-``` r
+options(warn=-1)
+suppressMessages(library(tidyverse))
+suppressMessages(library(lubridate))
 library(openxlsx)
 
 Employee = data.frame(
@@ -55,7 +33,11 @@ mutate(EmployeeFisrtName = randomNames::randomNames(nrow(.),
                              nrow(.),
                              replace = TRUE)
        )
+```
 
+Create corresponding sales data for only employees in sales department
+
+``` r
 ###Sales
 Sales = data.frame(
 EmployeeID = sample(Employee[Employee$Dept == 'Sales',]$EmployeeID,
@@ -78,29 +60,44 @@ Plot Distributions
 ggplot(Employee) +
   aes(x = Region) +
   geom_bar(fill = "#255F65") +
+    labs(
+    x = "Region",
+    y = "Frequency",
+    title = "Employees by Region"
+  ) +
   theme_classic()
 ```
 
-![](MakeLookupData_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+![](MakeLookupData_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
 
 ``` r
 ggplot(Sales) +
   aes(x = CustomerType) +
   geom_bar(fill = "#255F65") +
+    labs(
+    x = "Customer Segment",
+    y = "Frequency",
+    title = "Customers by Sales Segement"
+  ) +
   theme_classic()
 ```
 
-![](MakeLookupData_files/figure-gfm/unnamed-chunk-2-2.png)<!-- -->
+![](MakeLookupData_files/figure-gfm/unnamed-chunk-3-2.png)<!-- -->
 
 ``` r
 ggplot(Sales) +
   aes(x = SaleRevenue) +
   geom_histogram(bins = 40L, fill = "#255F65") +
   labs(x = "Sale Revenue", y = "Frequency") +
+    labs(
+    x = "Revenue",
+    y = "Frequency",
+    title = "Frequency of Individual Sales"
+  ) +
   theme_classic()
 ```
 
-![](MakeLookupData_files/figure-gfm/unnamed-chunk-2-3.png)<!-- -->
+![](MakeLookupData_files/figure-gfm/unnamed-chunk-3-3.png)<!-- -->
 
 Examine sales revenue by customer segment
 
@@ -118,7 +115,7 @@ ggplot(Sales) +
   facet_wrap(vars(CustomerType))
 ```
 
-![](MakeLookupData_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+![](MakeLookupData_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
 What department has the highest payroll?
 
@@ -131,11 +128,40 @@ Employee %>%
   geom_bar(stat = "identity",fill = "#255F65") +
     labs(
     x = "Department",
-    y = "Revenue",
+    y = "Payroll Total",
     title = "Payroll by Department"
   ) +
   theme_classic() +
   scale_y_continuous(labels = scales::unit_format(unit = "M", scale = 1e-6))
 ```
 
-![](MakeLookupData_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![](MakeLookupData_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+
+To plot sale totals by region, join Employee dataframe to Sales
+dataframe
+
+``` r
+Employee %>% 
+  select(EmployeeID,Region) %>% 
+  left_join(Sales) %>% 
+  group_by(Region,CustomerType) %>% 
+  summarise(SaleTotal = sum(SaleRevenue,na.rm=T)) %>% 
+  drop_na() %>% 
+  ggplot(aes(x = Region, fill = CustomerType, weight = SaleTotal)) +
+  geom_bar() +
+  scale_fill_hue(direction = 1) +
+  labs(y = "Revenue", title = "Sales by Region & Segment") +
+  theme_minimal() +
+  theme(legend.position = "bottom") +
+  scale_y_continuous(labels = scales::unit_format(unit = "M", scale = 1e-6))
+```
+
+    ## Joining, by = "EmployeeID"
+    ## `summarise()` has grouped output by 'Region'. You can override using the
+    ## `.groups` argument.
+
+![](MakeLookupData_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
+``` r
+#EmployeeID inferred join column
+```
