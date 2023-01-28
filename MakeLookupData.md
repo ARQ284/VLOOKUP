@@ -1,4 +1,4 @@
-Data for VLOOKUP (with Exploratory Data Analysis)
+Creating (Meaningful) Random Data
 ================
 
 ## Make dataset
