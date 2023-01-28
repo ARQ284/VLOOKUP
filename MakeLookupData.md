@@ -1,7 +1,9 @@
-Make Data for VLOOKUP
+Data for VLOOKUP (with Exploratory Data Analysis)
 ================
 
-Create random employee…
+## Make dataset
+
+Create random employees…
 
 ``` r
 options(warn=-1)
@@ -54,7 +56,9 @@ mutate(
   mutate(Commission = SaleRevenue * 0.02)
 ```
 
-Plot Distributions
+## Plot Distributions
+
+Employee and sales data…
 
 ``` r
 ggplot(Employee) +
@@ -151,7 +155,7 @@ Employee %>%
   geom_bar() +
   scale_fill_hue(direction = 1) +
   labs(y = "Revenue", title = "Sales by Region & Segment") +
-  theme_minimal() +
+  theme_classic() +
   theme(legend.position = "bottom") +
   scale_y_continuous(labels = scales::unit_format(unit = "M", scale = 1e-6))
 ```
@@ -161,7 +165,3 @@ Employee %>%
     ## `.groups` argument.
 
 ![](MakeLookupData_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
-
-``` r
-#EmployeeID inferred join column
-```
