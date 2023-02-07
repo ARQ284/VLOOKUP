@@ -2,7 +2,9 @@ Creating (Meaningful) Random Data
 ================
 
 This notebook is used to create data for a fictional regional car
-dealership \## Make dataset
+dealership
+
+## Make dataset
 
 Create random employees…
 
@@ -136,7 +138,7 @@ ggplot(Sales) +
     y = "Frequency",
     title = "Frequency of Individual Sales by Segment"
   ) +
-  theme_minimal() +
+  theme_classic() +
   theme(panel.spacing = unit(1, "cm")) +
   facet_wrap(vars(CustomerType))
 ```
