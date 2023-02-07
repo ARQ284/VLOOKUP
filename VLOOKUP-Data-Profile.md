@@ -68,7 +68,7 @@ EmployeeID = sample(Employee[Employee$Dept == 'Sales',]$EmployeeID,
 mutate(
   SaleRevenue = abs(round(rnorm(nrow(.), 
                 mean = 30000, 
-                sd = 15000))),
+                sd = 100))),
   VehicleCondition = sample(c('New','Used'),
                  nrow(.),
                  prob=c(.33,.67),
