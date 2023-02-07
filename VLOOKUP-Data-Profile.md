@@ -1,7 +1,8 @@
 Creating (Meaningful) Random Data
 ================
 
-## Make dataset
+This notebook is used to create data for a fictional regional car
+dealership \## Make dataset
 
 Create random employees…
 
@@ -37,7 +38,24 @@ mutate(EmployeeFisrtName = randomNames::randomNames(nrow(.),
        )
 ```
 
-Create corresponding sales data for only employees in sales department
+- **EmployeeID** = Sequential number 1 - 500 prefixed with “E”
+
+- **EmployeeFirstName** = Names created from the `randomNames` package
+
+- **EmployeeLastName** = Names created from the `randomNames` package
+
+- **Dept** = Department; 5 departments with the corresponding
+  distribution (%) in the `prob` argument
+
+- **Region** = 4 regions with the corresponding distribution (%) in the
+  `prob` argument
+
+- **Salary** = Normal distribution across employees with a mean of
+  \$70,000 and a standard deviation of \$9,000
+
+- **HireDate** = Random date between January 1st, 2007 and today
+
+Now create sales data for only employees in the Sales department…
 
 ``` r
 ###Sales
@@ -47,11 +65,15 @@ EmployeeID = sample(Employee[Employee$Dept == 'Sales',]$EmployeeID,
                       replace = T)) %>% 
 mutate(
   SaleRevenue = abs(round(rnorm(nrow(.), 
-                mean = 5000, 
-                sd = 1000))),
+                mean = 30000, 
+                sd = 15000))),
+  VehicleCondition = sample(c('New','Used'),
+                 nrow(.),
+                 prob=c(.33,.67),
+                 replace=TRUE),
   CustomerType = sample(c('Individual','Professional','Government'),
                  nrow(.),
-                 prob=c(0.55,0.30,0.15),
+                 prob=c(0.65,0.30,0.05),
                  replace=TRUE)) %>% 
   mutate(Commission = SaleRevenue * 0.02)
 ```
@@ -165,6 +187,29 @@ Employee %>%
     ## `.groups` argument.
 
 ![](VLOOKUP-Data-Profile_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
+``` r
+#Vehicle Type
+Employee %>% 
+  select(EmployeeID,Region) %>% 
+  left_join(Sales) %>% 
+  group_by(Region,VehicleCondition) %>% 
+  summarise(SaleTotal = sum(SaleRevenue,na.rm=T)) %>% 
+  drop_na() %>% 
+  ggplot(aes(x = Region, fill = VehicleCondition, weight = SaleTotal)) +
+  geom_bar() +
+  scale_fill_hue(direction = 1) +
+  labs(y = "Revenue", title = "Sales by Region & Condition") +
+  theme_classic() +
+  theme(legend.position = "bottom") +
+  scale_y_continuous(labels = scales::unit_format(unit = "M", scale = 1e-6))
+```
+
+    ## Joining, by = "EmployeeID"
+    ## `summarise()` has grouped output by 'Region'. You can override using the
+    ## `.groups` argument.
+
+![](VLOOKUP-Data-Profile_files/figure-gfm/unnamed-chunk-6-2.png)<!-- -->
 
 Finally, export to Excel…
 
