@@ -80,6 +80,15 @@ mutate(
   mutate(Commission = SaleRevenue * 0.02)
 ```
 
+- **EmployeeID** = Employee ID from Sales department
+
+- **SaleRevenue** = Sale amount of a vehicle
+
+- **CustomerType** = 3 customer types with corresponding distribution
+  (%) in `prob`
+
+- **Commission** = 2% of sale price
+
 ## Plot Distributions
 
 Employee and sales data…
@@ -138,7 +147,7 @@ ggplot(Sales) +
     y = "Frequency",
     title = "Frequency of Individual Sales by Segment"
   ) +
-  theme_classic() +
+  theme_bw() +
   theme(panel.spacing = unit(1, "cm")) +
   facet_wrap(vars(CustomerType))
 ```
